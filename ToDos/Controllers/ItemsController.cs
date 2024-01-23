@@ -1,12 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
-using ToDos.Models;
+using ToDoList.Models;
 using System.Collections.Generic;
 
-namespace ToDos.Controllers
+namespace ToDoList.Controllers
 {
   public class ItemsController : Controller
   {
-
     [HttpGet("/items")]
     public ActionResult Index()
     {
@@ -27,5 +26,11 @@ namespace ToDos.Controllers
       return RedirectToAction("Index");
     }
 
+    [HttpPost("/items/delete")]
+    public ActionResult DeleteAll()
+    {
+      Item.ClearAll();
+      return View();
+    }
   }
 }
