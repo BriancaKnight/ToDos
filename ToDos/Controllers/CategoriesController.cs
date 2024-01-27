@@ -39,6 +39,7 @@ namespace ToDos.Controllers
       return View(model);
     }
 
+
     // This one creates new Items within a given Category, not new Categories:
     [HttpPost("/categories/{categoryId}/items")]
     public ActionResult Create(int categoryId, string itemDescription)
@@ -52,6 +53,5 @@ namespace ToDos.Controllers
       model.Add("category", foundCategory);
       return View("Show", model);
     }
-
   }
 }
