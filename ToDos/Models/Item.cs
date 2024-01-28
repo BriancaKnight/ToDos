@@ -40,10 +40,21 @@ namespace ToDos.Models
       return allItems;
     }
 
-        public static void ClearAll()
-        {
+   public static void ClearAll()
+   {
+     MySqlConnection conn = new MySqlConnection(DBConfiguration.ConnectionString);
+     conn.Open();
 
-        }
+     MySqlCommand cmd = conn.CreateCommand() as MySqlCommand;
+     cmd.CommandText = "DELETE FROM items;";
+     cmd.ExecuteNonQuery();
+
+      conn.Close();
+     if (conn != null)
+     {
+      conn.Dispose();
+     }
+  }
 
         public static Item Find(int searchId)
         {
