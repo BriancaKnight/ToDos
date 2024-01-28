@@ -2,6 +2,7 @@ using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using ToDos.Models;
 using System;
+using Microsoft.Extensions.Configuration;
 
 namespace ToDos.Tests
 {
@@ -9,9 +10,19 @@ namespace ToDos.Tests
   public class ItemTests : IDisposable
   {
 
+    public IConfiguration Configuration { get; set; }
+
     public void Dispose()
     {
       Item.ClearAll();
+    }
+
+    public ItemTests()
+    {
+      IConfigurationBuilder builder = new ConfigurationBuilder()
+          .AddJsonFile("appsettings.json");
+      Configuration = builder.Build();
+      DBConfiguration.ConnectionString = Configuration["ConnectionStrings:TestConnection"];
     }
 
     [TestMethod]
