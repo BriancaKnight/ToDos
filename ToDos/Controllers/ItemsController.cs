@@ -16,19 +16,18 @@ namespace ToDos.Controllers
       _db = db;
     }
 
-    public ActionResult Index()
-    {
-      List<Item> model = _db.Items
-                            .Include(item => item.Category)
-                            .ToList();
-      return View(model);
-    }
+public ActionResult Index()
+{
+  List<Item> model = _db.Items.Include(item => item.Category).ToList(); 
+  ViewBag.PageTitle = "View All Items";
+  return View(model);
+}
 
-    public ActionResult Create()
-    {
-      ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
-      return View();
-    }
+public ActionResult Create()
+{
+  ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
+  return View();
+}
 
     [HttpPost]
     public ActionResult Create(Item item)
@@ -50,12 +49,12 @@ namespace ToDos.Controllers
       return View(thisItem);
     }
 
-    public ActionResult Edit(int id)
-    {
-      Item thisItem = _db.Items.FirstOrDefault(item => item.ItemId == id);
-      ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
-      return View(thisItem);
-    }
+public ActionResult Edit(int id)
+{
+  Item thisItem = _db.Items.FirstOrDefault(item => item.ItemId == id);
+  ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
+  return View(thisItem);
+}
 
     [HttpPost]
     public ActionResult Edit(Item item)
@@ -64,13 +63,7 @@ namespace ToDos.Controllers
       _db.SaveChanges();
       return RedirectToAction("Index");
     }
-
-    public ActionResult Delete(int id)
-    {
-      Item thisItem = _db.Items.FirstOrDefault(item => item.ItemId == id);
-      return View(thisItem);
-    }
-
+    
     [HttpPost, ActionName("Delete")]
     public ActionResult DeleteConfirmed(int id)
     {
