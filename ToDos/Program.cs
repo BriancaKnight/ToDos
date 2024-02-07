@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using ToDos.Models;
+using Microsoft.AspNetCore.Identity;
 
 namespace ToDos
 {
@@ -20,6 +21,10 @@ namespace ToDos
                           )
                         )
                       );
+
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+                .AddEntityFrameworkStores<ToDosContext>()
+                .AddDefaultTokenProviders();
 
       WebApplication app = builder.Build();
 

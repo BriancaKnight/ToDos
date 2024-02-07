@@ -1,8 +1,9 @@
 using Microsoft.EntityFrameworkCore;
+using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 
 namespace ToDos.Models
 {
-  public class ToDosContext : DbContext
+  public class ToDosContext : IdentityDbContext<ApplicationUser>
   {
     public DbSet<Category> Categories { get; set; }
     public DbSet<Item> Items { get; set; }
