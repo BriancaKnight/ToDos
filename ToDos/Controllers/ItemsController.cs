@@ -4,24 +4,35 @@ using Microsoft.AspNetCore.Mvc;
 using ToDos.Models;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
+using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace ToDos.Controllers
 {
+  [Authorize]
   public class ItemsController : Controller
   {
     private readonly ToDosContext _db;
+    private readonly UserManager<ApplicationUser> _userManager;
 
-    public ItemsController(ToDosContext db)
+    public ItemsController(UserManager<ApplicationUser> userManager, ToDosContext db)
     {
+      _userManager = userManager;
       _db = db;
     }
 
-public ActionResult Index()
-{
-  List<Item> model = _db.Items.Include(item => item.Category).ToList(); 
-  ViewBag.PageTitle = "View All Items";
-  return View(model);
-}
+    public async Task<ActionResult> Index()
+    {
+      string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+      ApplicationUser currentUser = await _userManager.FindByIdAsync(userId);
+      List<Item> userItems = _db.Items
+                          .Where(entry => entry.User.Id == currentUser.Id)
+                          .Include(item => item.Category)
+                          .ToList();
+      return View(userItems);
+    }
 
 public ActionResult Create()
 {
@@ -29,17 +40,23 @@ public ActionResult Create()
   return View();
 }
 
-    [HttpPost]
-    public ActionResult Create(Item item)
+   [HttpPost]
+    public async Task<ActionResult> Create(Item item, int CategoryId)
     {
       if (!ModelState.IsValid)
       {
         ViewBag.CategoryId = new SelectList(_db.Categories, "CategoryId", "Name");
         return View(item);
       }
-      _db.Items.Add(item);
-      _db.SaveChanges();
-      return RedirectToAction("Index");
+      else
+      {
+        string userId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+        ApplicationUser currentUser = await _userManager.FindByIdAsync(userId);
+        item.User = currentUser;
+        _db.Items.Add(item);
+        _db.SaveChanges();
+        return RedirectToAction("Index");
+      }
     }
 
     public ActionResult Details(int id)
