@@ -10,6 +10,7 @@ namespace ToDos
   {
     static void Main(string[] args)
     {
+
       WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
       builder.Services.AddControllersWithViews();
@@ -21,20 +22,20 @@ namespace ToDos
                           )
                         )
                       );
-
-builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+      
+      builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ToDosContext>()
                 .AddDefaultTokenProviders();
 
-// builder.Services.Configure<IdentityOptions>(options =>
-// {
-//   options.Password.RequireDigit = false;
-//   options.Password.RequireLowercase = false;
-//   options.Password.RequireNonAlphanumeric = false;
-//   options.Password.RequireUppercase = false;
-//   options.Password.RequiredLength = 0;
-//   options.Password.RequiredUniqueChars = 0;
-// });
+      // builder.Services.Configure<IdentityOptions>(options =>
+      // {
+      //   options.Password.RequireDigit = false;
+      //   options.Password.RequireLowercase = false;
+      //   options.Password.RequireNonAlphanumeric = false;
+      //   options.Password.RequireUppercase = false;
+      //   options.Password.RequiredLength = 0;
+      //   options.Password.RequiredUniqueChars = 0;
+      // });
 
       WebApplication app = builder.Build();
 
@@ -44,9 +45,13 @@ builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
 
       app.UseRouting();
 
+      app.UseAuthentication(); 
+      app.UseAuthorization();
+
       app.MapControllerRoute(
           name: "default",
-          pattern: "{controller=Home}/{action=Index}/{id?}");
+          pattern: "{controller=Home}/{action=Index}/{id?}"
+        );
 
       app.Run();
     }
